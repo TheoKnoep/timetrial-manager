@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <link rel="stylesheet" href="style.css" type="text/css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <div class="countdown-container">
+
+        </div>
+    </div>
+
+    <script src="classes/Racer.js"></script>
+    <script src="classes/Competition.js"></script>
+    <script src="classes/Time.js"></script>
+    <script>
+        let racer = new Racer("Maurice", 1, 1665471300124); 
+
+        console.log(racer); 
+
+
+        //countdow : 
+        let nextStart = 1665493200000; // 15:00:00
+        let getRoundeTimeNow = () => {
+            return Math.floor( Date.now() / 1000 ) * 1000; 
+        }
+        const countdown = setInterval(() => {
+            const containerHTML = document.querySelector('.countdown-container'); 
+            let timeLeft = nextStart - getRoundeTimeNow(); 
+            let formated = TimeFormat.convertMsToTime( nextStart - getRoundeTimeNow()); 
+            containerHTML.textContent = formated.string;
+            if (parseInt(formated.detail.seconds) < 11 ) { 
+                containerHTML.style.color = "red"; 
+            }
+            if (parseInt(formated.detail.seconds) > 10 ) { 
+                containerHTML.style.color = "#000"; 
+             }
+            if (timeLeft <= 0) { clearInterval(countdown) }
+        }, 1000); 
+        
+    </script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+* {
+    margin: 0; 
+    padding: 0; 
+}
+
+.countdown-container {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 68px; 
+    text-align: center;
+}
+.alert {
+    color: red; 
+}
+.ok {
+    color: green; 
+}
