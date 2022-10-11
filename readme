@@ -1,0 +1,8 @@
+# Time trial manager 
+
+Web app dedicated to organize a time trial race : 
+
+- startlist of participants
+- manage starts 
+- calculate times
+- display final ranking
