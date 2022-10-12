@@ -28,8 +28,8 @@
         console.log(racer); 
 
 
-        //countdow : 
-        let nextStart = 1665493200000; // 15:00:00
+        //countdown : 
+        let nextStart = Date.now() + (1 * 60 * 1000); // Now + 1 min
         let getRoundeTimeNow = () => {
             return Math.floor( Date.now() / 1000 ) * 1000; 
         }
@@ -44,7 +44,10 @@
             if (parseInt(formated.detail.seconds) > 10 ) { 
                 containerHTML.style.color = "#000"; 
              }
-            if (timeLeft <= 0) { clearInterval(countdown) }
+            if (timeLeft <= 0) { 
+                // clearInterval(countdown); 
+                timeLeft = 2 * 60 * 1000; // 2 min 
+            }
         }, 1000); 
         
     </script>
