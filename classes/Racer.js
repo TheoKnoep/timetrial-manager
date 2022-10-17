@@ -1,8 +1,8 @@
 class Racer {
-    constructor(name, number, start_time) {
+    constructor(name, number) {
         this.name = name; 
         this.number = number; 
-        this.start_time = start_time; 
+        this.start_time = null; 
         this.finish_time = null; 
     }
 
@@ -11,7 +11,10 @@ class Racer {
         console.log(this.convertMsToTime(this.finish_time - this.start_time)); 
         return this.finish_time - this.start_time; 
     }
-
+    defineStartingTime(timestamp = Date.now()) {
+        this.start_time = timestamp; 
+        return "set"; 
+    }
     defineFinishTime(timestamp = Date.now()) {
         this.finish_time = timestamp; 
         return "finish time updated"; 
@@ -38,6 +41,10 @@ class Racer {
 
 
     HTMLsingleRow() {
-        return `${this.name} | ${this.start_time} | NA`; 
+        return  `<td>${ this.number }</td>
+                <td>${ this.name }</td>
+                <td></td>
+                <td></td>
+                <td></td>`; 
     }
 }
