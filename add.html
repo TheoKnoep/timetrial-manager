@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Ajouter des coureurs</title>
+</head>
+<body>
+	<form id="add-racer">
+		<input type="submit" value="Lancer la course">
+		<input type="text" name="racer-0" placeholder="Nom">
+	</form>
+
+	<button id="add">Ajouter</button>
+	
+
+	<script>
+		const addBtn = document.getElementById('add'); 
+		const form = document.getElementById('add-racer'); 
+		let indix = 1; 
+		addBtn.addEventListener('click', event => {
+			form.insertAdjacentHTML('beforeend', `<input type="text" name="racer-${indix}" placeholder="Nom">` ); 
+			indix ++; 
+		})
+
+		form.addEventListener('submit', event => {
+			event.preventDefault(); 
+
+			let data = new FormData(form); 
+
+			console.log(form.length - 1); 
+
+			let startList = []; 
+			for (let i = 0; i < form.length - 1; i++) {
+				console.log(data.get(`racer-${i}`)); 
+				startList.push(data.get(`racer-${i}`)); 
+			}
+
+			localStorage.setItem('storedStartList', JSON.stringify(startList)); 
+		})
+	</script>
+</body>
+</html>

@@ -5,4 +5,6 @@ class Competition {
         this.starting_hour = starting_hour; 
         this.starts_orders = undefined; 
     }
+
+    
 }

@@ -15,7 +15,7 @@
 <body>
     <div class="app-container">
         <div class="countdown-container">
-
+            <button id="launch-countdown">Lancer le compte à rebours</button>
         </div>
 
         <div class="startlist-container">
@@ -50,48 +50,46 @@
     <script src="classes/Competition.js"></script>
     <script src="classes/TimeFormat.js"></script>
     <script>
-        let racer = new Racer("Maurice", 1); 
-
-        console.log(racer.HTMLsingleRow()); 
-
-        console.log(racer); 
-
 
         //countdown : 
-        let nextStart = Date.now() + (1 * 5 * 1000); // Now + 5 sec
-        let getRoundedTimeNow = () => {
-            return Math.floor( Date.now() / 1000 ) * 1000; 
-        }
-        // const countdown = setInterval(() => {
-        //     const containerHTML = document.querySelector('.countdown-container'); 
-        //     let timeLeft = nextStart - getRoundedTimeNow(); 
-        //     let formated = TimeFormat.convertMsToTime( timeLeft ); 
-        //     containerHTML.textContent = formated.string;
-        //     if (parseInt(formated.detail.seconds) < 11 ) { 
-        //         containerHTML.style.color = "red"; 
-        //     }
-        //     if (parseInt(formated.detail.seconds) > 10 ) { 
-        //         containerHTML.style.color = "#000"; 
-        //     }
-        //     if (timeLeft <= 1000) { 
-        //         // clearInterval(countdown); 
-        //         nextStart = Date.now() + (20 * 1000); 
-        //     }
-        // }, 1000); 
+        let launchCounterBtn = document.getElementById('launch-countdown'); 
+        launchCounterBtn.addEventListener('click', event => {
+            let nextStart = Date.now() + (10 * 1000); // Now + 5 sec
+            let getRoundedTimeNow = () => {
+                return Math.floor( Date.now() / 1000 ) * 1000; 
+            }
+            const countdown = setInterval(() => {
+                const containerHTML = document.querySelector('.countdown-container'); 
+                let timeLeft = nextStart - getRoundedTimeNow(); 
+                let formated = TimeFormat.convertMsToTime( timeLeft ); 
+                containerHTML.textContent = formated.string;
+                if (parseInt(formated.detail.seconds) < 11 ) { 
+                    containerHTML.style.color = "red"; 
+                }
+                if (parseInt(formated.detail.seconds) > 10 ) { 
+                    containerHTML.style.color = "#000"; 
+                }
+                if (timeLeft <= 1000) { 
+                    // clearInterval(countdown); 
+                    nextStart = Date.now() + (20 * 1000); // 20 sec
+                }
+            }, 1000); 
+        })
+
 
 
 
 
         // Competition
-        let startList = [
-            new Racer('Alain', 1), 
-            new Racer('Marc', 2), 
-            new Racer('Hector', 99), 
-            new Racer('Samy', 6)
-        ]; 
-        let newRacer = {"name": "Frac", "number": 5}; 
+        let initiateStartList = JSON.parse(localStorage.getItem('storedStartList')) || []; 
+        if (initiateStartList.length === 0) { window.location.href = "add.html" }; 
+        let startList = []; ; 
 
-        startList.push(new Racer(newRacer.name, newRacer.number)); 
+        for (let i = 0; i < initiateStartList.length; i++) {
+            startList.push(new Racer(initiateStartList[i], i+1)); 
+        }
+
+        console.log(startList); 
 
 
         let bodyOfTable = ''; 
@@ -127,20 +125,69 @@
             }); 
             let selectOptions = ''; 
             runningRacers.forEach(racer => {
-                selectOptions += `<option value="${racer.number}">${racer.name}</option>`; 
+                selectOptions += `<option value="${racer.name}">${racer.name}</option>`; 
             })
             console.log(runningRacers); 
+            let hash = generateRandomString(); 
             let newInsert = `
-            <form>
-                <input type="number" id="finishing-number">
-                <select>
+            <form class="new-finish-form" id="new-finish-form-${hash}">
+                <input type="number" id="finishing-number" name="finishing-number" >
+                <select name="name">
                     <option value="">Sélectionnez le coureur arrivé :</option>
                     ${selectOptions}
                 </select>
-                <input type="hidden" value="${Date.now()}">
-                <input type="submit" value="Valider">
+                <input type="hidden" value="${Date.now()}" name="time">
+                <input type="submit" value="Valider" id="submit">
             </form>`; 
             document.getElementById('finish-handler').insertAdjacentHTML('beforeend', newInsert); 
+            document.querySelector(`#new-finish-form-${hash} #finishing-number`).focus(); 
+            document.getElementById(`new-finish-form-${hash}`).addEventListener('submit', event => {
+                event.preventDefault(); 
+                //identify which racer is concerned : 
+                let data = new FormData(document.getElementById(`new-finish-form-${hash}`)); 
+                console.log('datataa : ', data); 
+                console.log(data.get('finishing-number')); 
+                console.log(data.get('name')); 
+                console.log(data.get('time')); 
+                
+                let concernedRacerIndex = getRacerByNumber(parseInt(data.get('finishing-number'))) || getRacerByName(data.get('name')); 
+
+                console.log('indexxxxxxxxxx', concernedRacerIndex); 
+                startList[concernedRacerIndex].defineFinishTime(data.get('time')); 
+                document.getElementById(`racer-${startList[concernedRacerIndex].number}-finish_time`).textContent = TimeFormat.displayFormatedHour(startList[concernedRacerIndex].finish_time).string;
+                document.getElementById(`racer-${startList[concernedRacerIndex].number}-final_time`).textContent = TimeFormat.convertMsToTime(startList[concernedRacerIndex].calculateFinalTime()).string;
+                document.getElementById(`new-finish-form-${hash}`).style.display = "none"; 
+            })
+
+        }
+
+        function getRacerByNumber(number) {
+            let response = null; 
+            for (let i in startList) {
+                if (startList[i].number === number) {
+                    return i; 
+                }
+            }
+        }
+        function getRacerByName(name) {
+            let response = null; 
+            for (let i in startList) {
+                if (startList[i].name === name) {
+                    return i; 
+                }
+            }
+        }
+
+
+        function generateRandomString(length = 8) {
+            let possibles = "abcdefghijklmonpqrstuvwxyz1234567890"; 
+            let output = ""; 
+            for (let i = 0; i < length; i++) {
+                let newChar = possibles[ Math.floor(Math.random() * possibles.length)]; 
+                if (Math.random() > .5) { newChar = newChar.toUpperCase() }; 
+                output += newChar; 
+            }
+            return output; 
         }
         
     </script>

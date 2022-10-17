@@ -46,7 +46,7 @@ class Racer {
         <td id="racer-${this.number}-name">${ this.name }</td>
         <td id="racer-${this.number}-starting_time">${ this.start_time }</td>
         <td id="racer-${this.number}-finish_time">${ this.finish_time }</td>
-        <td id="racer-${this.number}-finale_time">${ this.calculateFinalTime() }</td>
+        <td id="racer-${this.number}-final_time">${ this.calculateFinalTime() }</td>
         </tr>`; 
     }
 }

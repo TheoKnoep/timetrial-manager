@@ -4,6 +4,11 @@
     font-family: sans-serif;
 }
 
+td {
+    border: solid 1px gray;
+    padding: 6px;
+}
+
 .countdown-container {
     font-family: 'JetBrains Mono', monospace;
     font-size: 68px; 
