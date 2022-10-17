@@ -41,10 +41,12 @@ class Racer {
 
 
     HTMLsingleRow() {
-        return  `<td>${ this.number }</td>
-                <td>${ this.name }</td>
-                <td></td>
-                <td></td>
-                <td></td>`; 
+        return  `<tr id="row-${this.number}">
+        <td id="racer-${this.number}-number">${ this.number }</td>
+        <td id="racer-${this.number}-name">${ this.name }</td>
+        <td id="racer-${this.number}-starting_time">${ this.start_time }</td>
+        <td id="racer-${this.number}-finish_time">${ this.finish_time }</td>
+        <td id="racer-${this.number}-finale_time">${ this.calculateFinalTime() }</td>
+        </tr>`; 
     }
 }

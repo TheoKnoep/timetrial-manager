@@ -29,50 +29,119 @@
                     <th>Temps final</th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody id="table-content">
                   <tr>
                     <td></td>
                     <td></td>
                     <td></td>
                     <td></td>
                     <td></td>
-                    
                   </tr>
                 </tbody>
                 </table>
+        </div>
+
+        <div id="finish-handler">
+            <button onclick="handleFinish()">Arrivée</button>
         </div>
     </div>
 
     <script src="classes/Racer.js"></script>
     <script src="classes/Competition.js"></script>
-    <script src="classes/Time.js"></script>
+    <script src="classes/TimeFormat.js"></script>
     <script>
-        let racer = new Racer("Maurice", 1, 1665471300124); 
+        let racer = new Racer("Maurice", 1); 
+
+        console.log(racer.HTMLsingleRow()); 
 
         console.log(racer); 
 
 
         //countdown : 
-        let nextStart = Date.now() + (1 * 60 * 1000); // Now + 1 min
-        let getRoundeTimeNow = () => {
+        let nextStart = Date.now() + (1 * 5 * 1000); // Now + 5 sec
+        let getRoundedTimeNow = () => {
             return Math.floor( Date.now() / 1000 ) * 1000; 
         }
-        const countdown = setInterval(() => {
-            const containerHTML = document.querySelector('.countdown-container'); 
-            let timeLeft = nextStart - getRoundeTimeNow(); 
-            let formated = TimeFormat.convertMsToTime( nextStart - getRoundeTimeNow()); 
-            containerHTML.textContent = formated.string;
-            if (parseInt(formated.detail.seconds) < 11 ) { 
-                containerHTML.style.color = "red"; 
-            }
-            if (parseInt(formated.detail.seconds) > 10 ) { 
-                containerHTML.style.color = "#000"; 
-             }
-            if (timeLeft <= 0) { 
-                // clearInterval(countdown); 
-                timeLeft = 2 * 60 * 1000; // 2 min 
-            }
-        }, 1000); 
+        // const countdown = setInterval(() => {
+        //     const containerHTML = document.querySelector('.countdown-container'); 
+        //     let timeLeft = nextStart - getRoundedTimeNow(); 
+        //     let formated = TimeFormat.convertMsToTime( timeLeft ); 
+        //     containerHTML.textContent = formated.string;
+        //     if (parseInt(formated.detail.seconds) < 11 ) { 
+        //         containerHTML.style.color = "red"; 
+        //     }
+        //     if (parseInt(formated.detail.seconds) > 10 ) { 
+        //         containerHTML.style.color = "#000"; 
+        //     }
+        //     if (timeLeft <= 1000) { 
+        //         // clearInterval(countdown); 
+        //         nextStart = Date.now() + (20 * 1000); 
+        //     }
+        // }, 1000); 
+
+
+
+
+        // Competition
+        let startList = [
+            new Racer('Alain', 1), 
+            new Racer('Marc', 2), 
+            new Racer('Hector', 99), 
+            new Racer('Samy', 6)
+        ]; 
+        let newRacer = {"name": "Frac", "number": 5}; 
+
+        startList.push(new Racer(newRacer.name, newRacer.number)); 
+
+
+        let bodyOfTable = ''; 
+        for (let i in startList) {
+            bodyOfTable += startList[i].HTMLsingleRow(); 
+        }
+
+        document.getElementById('table-content').innerHTML = bodyOfTable; 
+
+        
+
+        startList.forEach(racer => {
+            console.log(racer.number); 
+            console.log(document.getElementById(`row-${racer.number}`)); 
+            let currentRow = document.getElementById(`row-${racer.number}`); 
+            currentRow.insertAdjacentHTML('beforeend', `<td><button id="set-start-${racer.number}">GO</button></td>`); 
+            document.getElementById(`set-start-${racer.number}`).addEventListener('click', event => { 
+                racer.defineStartingTime(); 
+                document.getElementById(`racer-${racer.number}-starting_time`).textContent = TimeFormat.displayFormatedHour(racer.start_time).string; 
+            })
+        })
+
+
+
+
+        // Handle Finish
+        function handleFinish() {
+            let runningRacers = []; 
+            startList.forEach(racer => {
+                if(racer.start_time && !racer.finish_time) {
+                    runningRacers.push(racer); 
+                }
+            }); 
+            let selectOptions = ''; 
+            runningRacers.forEach(racer => {
+                selectOptions += `<option value="${racer.number}">${racer.name}</option>`; 
+            })
+            console.log(runningRacers); 
+            let newInsert = `
+            <form>
+                <input type="number" id="finishing-number">
+                <select>
+                    <option value="">Sélectionnez le coureur arrivé :</option>
+                    ${selectOptions}
+                </select>
+                <input type="hidden" value="${Date.now()}">
+                <input type="submit" value="Valider">
+            </form>`; 
+            document.getElementById('finish-handler').insertAdjacentHTML('beforeend', newInsert); 
+        }
         
     </script>
 </body>
