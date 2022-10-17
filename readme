@@ -11,4 +11,7 @@ Web app dedicated to organize a time trial race :
 
 ## Roadmap 
 
-- [ ] add keyboards shorcuts : 
+- [x] custom startlist via form
+- [ ] final ranking view 
+- [ ] style and UI
+- [ ] add keyboards shorcuts
