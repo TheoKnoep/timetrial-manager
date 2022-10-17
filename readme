@@ -15,3 +15,4 @@ Web app dedicated to organize a time trial race :
 - [ ] final ranking view 
 - [ ] style and UI
 - [ ] add keyboards shorcuts
+- [x] lock stored times against invalid modification

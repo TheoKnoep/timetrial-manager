@@ -11,11 +11,13 @@ class Racer {
         console.log(this.convertMsToTime(this.finish_time - this.start_time)); 
         return this.finish_time - this.start_time; 
     }
-    defineStartingTime(timestamp = Date.now()) {
+    defineStartingTime(timestamp = Date.now(), force = false) {
+        if (this.start_time && !force) { return "already-set" }
         this.start_time = timestamp; 
-        return "set"; 
+        return "start time updated"; 
     }
-    defineFinishTime(timestamp = Date.now()) {
+    defineFinishTime(timestamp = Date.now(), force =  false) {
+        if (this.finish_time && !force) { return "already-set" }
         this.finish_time = timestamp; 
         return "finish time updated"; 
     }
