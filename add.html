@@ -7,20 +7,26 @@
 	<title>Ajouter des coureurs</title>
 </head>
 <body>
+	<div><button onclick="emptySavedStartlist()">Vider la liste existante</button></div>
 	<form id="add-racer">
-		<input type="submit" value="Lancer la course">
-		<input type="text" name="racer-0" placeholder="Nom">
+		<div class="inputs-container">
+			<input type="text" name="racer-0" placeholder="Nom">
+		</div>
+		<button id="add">Ajouter un coureur</button>
+		<input type="submit" value="Enregistrer la liste">
 	</form>
 
-	<button id="add">Ajouter</button>
 	
-
+	
+	<script src="script.js"></script>
 	<script>
 		const addBtn = document.getElementById('add'); 
 		const form = document.getElementById('add-racer'); 
+		const inputsContainer = document.querySelector('.inputs-container'); 
+
 		let indix = 1; 
 		addBtn.addEventListener('click', event => {
-			form.insertAdjacentHTML('beforeend', `<input type="text" name="racer-${indix}" placeholder="Nom">` ); 
+			inputsContainer.insertAdjacentHTML('beforeend', `<input type="text" name="racer-${indix}" placeholder="Nom">` ); 
 			indix ++; 
 		})
 
